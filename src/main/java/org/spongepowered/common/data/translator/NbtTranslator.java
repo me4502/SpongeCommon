@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.data.persistence;
+package org.spongepowered.common.data.translator;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -65,6 +65,16 @@ public final class NbtTranslator implements DataTranslator<NBTTagCompound> {
     }
 
     private NbtTranslator() { } // #NOPE
+
+    @Override
+    public String getId() {
+        return "sponge:nbt";
+    }
+
+    @Override
+    public String getName() {
+        return "NBT DataTranslator";
+    }
 
     private static NBTTagCompound containerToCompound(final DataView container) {
         checkNotNull(container);
@@ -166,7 +176,6 @@ public final class NbtTranslator implements DataTranslator<NBTTagCompound> {
         throw new IllegalArgumentException("Unable to translate object to NBTBase!");
     }
 
-    @SuppressWarnings("unchecked")
     private static DataContainer getViewFromCompound(NBTTagCompound compound) {
         checkNotNull(compound);
         DataContainer container = new MemoryDataContainer();

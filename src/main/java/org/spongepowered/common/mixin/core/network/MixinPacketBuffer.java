@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.data.persistence.NbtTranslator;
+import org.spongepowered.common.data.translator.NbtTranslator;
 import org.spongepowered.common.network.ByteBufUtils;
 
 import java.io.IOException;

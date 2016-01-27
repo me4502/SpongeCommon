@@ -38,7 +38,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.data.builder.AbstractDataBuilder;
-import org.spongepowered.common.data.persistence.NbtTranslator;
+import org.spongepowered.common.data.translator.NbtTranslator;
 import org.spongepowered.common.data.util.DataQueries;
 import org.spongepowered.common.data.util.DataUtil;
 import org.spongepowered.common.interfaces.data.IMixinCustomDataHolder;

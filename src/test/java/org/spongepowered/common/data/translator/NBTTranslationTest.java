@@ -22,29 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.util.persistence.data;
+package org.spongepowered.common.data.translator;
 
+import static org.junit.Assert.assertTrue;
+
+import net.minecraft.nbt.NBTTagCompound;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.persistence.DataBuilder;
-import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.common.data.translator.NbtTranslator;
+import org.spongepowered.api.data.DataManager;
 
 import java.util.Optional;
 
-public class FakeBuilder implements DataBuilder<FakeSerializable> {
+public class NBTTranslationTest {
 
-    private static final DataQuery fooQuery = DataQuery.of("foo");
-    private static final DataQuery intQuery = DataQuery.of("myInt");
-    private static final DataQuery doubleQuery = DataQuery.of("theDouble");
-    private static final DataQuery nestedQuery = DataQuery.of("nested", "compound");
-
-    @Override
-    public Optional<FakeSerializable> build(DataView container) throws InvalidDataException {
-        String foo = container.getString(fooQuery).get();
-        int myInt = container.getInt(intQuery).get();
-        double myDouble = container.getDouble(doubleQuery).get();
-        String nested = container.getString(nestedQuery).get();
-
-        return Optional.of(new FakeSerializable(foo, myInt, myDouble, nested));
+    @Test
+    public void testContainerToNBT() {
+        DataManager service = Mockito.mock(DataManager.class);
+        DataBuilder<FakeSerializable> builder = new FakeBuilder();
+        Mockito.stub(service.getBuilder(FakeSerializable.class)).toReturn(Optional.of(builder));
+        DataContainer container = new MemoryDataContainer();
+        container.set(DataQuery.of("foo"), "bar");
+        FakeSerializable temp = new FakeSerializable("bar", 7, 10.0D, "nested");
+        container.set(DataQuery.of("myFake"), temp);
+        NBTTagCompound compound = NbtTranslator.getInstance().translateData(container);
+        DataView translatedContainer = NbtTranslator.getInstance().translateFrom(compound);
+        assertTrue(container.equals(translatedContainer));
     }
+
 }

@@ -31,8 +31,8 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.DataFormat;
 import org.spongepowered.api.data.persistence.InvalidDataFormatException;
-import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.common.SpongeCatalogType;
+import org.spongepowered.common.data.translator.ConfigurateTranslator;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
