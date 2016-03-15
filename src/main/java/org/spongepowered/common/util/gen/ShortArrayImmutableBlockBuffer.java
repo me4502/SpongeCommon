@@ -25,7 +25,6 @@
 package org.spongepowered.common.util.gen;
 
 import com.flowpowered.math.vector.Vector3i;
-import net.minecraft.block.Block;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.util.DiscreteTransform3;
@@ -35,15 +34,18 @@ import org.spongepowered.api.world.extent.MutableBlockVolume;
 import org.spongepowered.api.world.extent.StorageType;
 import org.spongepowered.api.world.extent.UnmodifiableBlockVolume;
 import org.spongepowered.api.world.extent.worker.BlockVolumeWorker;
+import org.spongepowered.api.world.schematic.BlockPalette;
 import org.spongepowered.common.world.extent.ImmutableBlockViewDownsize;
 import org.spongepowered.common.world.extent.ImmutableBlockViewTransform;
 import org.spongepowered.common.world.extent.worker.SpongeBlockVolumeWorker;
+import org.spongepowered.common.world.schematic.GlobalBlockPalette;
 
 @NonnullByDefault
 public class ShortArrayImmutableBlockBuffer extends AbstractBlockBuffer implements ImmutableBlockVolume {
 
     @SuppressWarnings("ConstantConditions")
     private static final BlockState AIR = BlockTypes.AIR.getDefaultState();
+    private final BlockPalette palette = GlobalBlockPalette.getInstance();
     private final short[] blocks;
 
     public ShortArrayImmutableBlockBuffer(short[] blocks, Vector3i start, Vector3i size) {
@@ -59,7 +61,7 @@ public class ShortArrayImmutableBlockBuffer extends AbstractBlockBuffer implemen
     @Override
     public BlockState getBlock(int x, int y, int z) {
         checkRange(x, y, z);
-        BlockState block = (BlockState) Block.BLOCK_STATE_IDS.getByValue(this.blocks[getIndex(x, y, z)]);
+        BlockState block = this.palette.getState(this.blocks[getIndex(x, y, z)]).get();
         return block == null ? AIR : block;
     }
 

@@ -25,8 +25,6 @@
 package org.spongepowered.common.util.gen;
 
 import com.flowpowered.math.vector.Vector3i;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.util.DiscreteTransform3;
@@ -36,37 +34,49 @@ import org.spongepowered.api.world.extent.MutableBlockVolume;
 import org.spongepowered.api.world.extent.StorageType;
 import org.spongepowered.api.world.extent.UnmodifiableBlockVolume;
 import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
+import org.spongepowered.api.world.schematic.BlockPalette;
 import org.spongepowered.common.world.extent.MutableBlockViewDownsize;
 import org.spongepowered.common.world.extent.MutableBlockViewTransform;
 import org.spongepowered.common.world.extent.UnmodifiableBlockVolumeWrapper;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
+import org.spongepowered.common.world.schematic.GlobalBlockPalette;
 
 @NonnullByDefault
 public class ShortArrayMutableBlockBuffer extends AbstractBlockBuffer implements MutableBlockVolume {
 
-    @SuppressWarnings("ConstantConditions")
-    private static final BlockState AIR = BlockTypes.AIR.getDefaultState();
+    @SuppressWarnings("ConstantConditions") private static final BlockState AIR = BlockTypes.AIR.getDefaultState();
+    protected final BlockPalette palette;
     private final short[] blocks;
 
     public ShortArrayMutableBlockBuffer(Vector3i start, Vector3i size) {
-        this(new short[size.getX() * size.getY() * size.getZ()], start, size);
+        this(new short[size.getX() * size.getY() * size.getZ()], start, size, GlobalBlockPalette.getInstance());
     }
 
     public ShortArrayMutableBlockBuffer(short[] blocks, Vector3i start, Vector3i size) {
+        this(blocks, start, size, GlobalBlockPalette.getInstance());
+    }
+
+    public ShortArrayMutableBlockBuffer(Vector3i start, Vector3i size, BlockPalette palette) {
+        this(new short[size.getX() * size.getY() * size.getZ()], start, size, palette);
+    }
+
+    public ShortArrayMutableBlockBuffer(short[] blocks, Vector3i start, Vector3i size, BlockPalette palette) {
         super(start, size);
         this.blocks = blocks;
+        this.palette = palette;
+        // TODO we should validate that the palette contains all of the blocks given to us in the array
     }
 
     @Override
     public void setBlock(int x, int y, int z, BlockState block) {
         checkRange(x, y, z);
-        this.blocks[getIndex(x, y, z)] = (short) Block.BLOCK_STATE_IDS.get((IBlockState) block);
+        this.blocks[getIndex(x, y, z)] = (short) this.palette.addState(block);
     }
 
     @Override
     public BlockState getBlock(int x, int y, int z) {
         checkRange(x, y, z);
-        BlockState block = (BlockState) Block.BLOCK_STATE_IDS.getByValue(this.blocks[getIndex(x, y, z)]);
+        BlockState block = this.palette.getState(this.blocks[getIndex(x, y, z)]).get();
         return block == null ? AIR : block;
     }
 
