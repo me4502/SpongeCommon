@@ -32,6 +32,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.SaveHandler;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataSerializable;
@@ -103,14 +104,21 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
         }
         NBTTagList spawnlist = compound.getTagList(NbtDataUtil.USER_SPAWN_LIST, NbtDataUtil.TAG_COMPOUND);
         for (int i = 0; i < spawnlist.tagCount(); i++) {
-            NBTTagCompound spawndata = (NBTTagCompound) spawnlist.getCompoundTagAt(i);
-            UUID uuid = WorldPropertyRegistryModule.dimIdToUuid(spawndata.getInteger(NbtDataUtil.USER_SPAWN_DIM));
-            if (uuid != null) {
-                this.spawnLocations.put(uuid, RespawnLocation.builder().world(uuid).position(
-                        new Vector3d(spawndata.getInteger(NbtDataUtil.USER_SPAWN_X),
-                                spawndata.getInteger(NbtDataUtil.USER_SPAWN_Y),
-                                spawndata.getInteger(NbtDataUtil.USER_SPAWN_Z))).build());
+            NBTTagCompound spawndata = spawnlist.getCompoundTagAt(i);
+            final long least = spawndata.getLong(NbtDataUtil.USER_SPAWN_WORLD_UUID_LEAST);
+            final long most = spawndata.getLong(NbtDataUtil.USER_SPAWN_WORLD_UUID_MOST);
+            if (least != 0 && most != 0) {
+                final double xPos = spawndata.getDouble(NbtDataUtil.USER_SPAWN_X);
+                final double yPos = spawndata.getDouble(NbtDataUtil.USER_SPAWN_Y);
+                final double zPos = spawndata.getDouble(NbtDataUtil.USER_SPAWN_Z);
+                final boolean forced = spawndata.getBoolean(NbtDataUtil.USER_SPAWN_FORCED);
+                this.spawnLocations.put(new UUID(most, least), new RespawnLocation.Builder()
+                        .forceSpawn(forced)
+                        .position(new Vector3d(xPos, yPos, zPos))
+                        .world(new UUID(most, least))
+                        .build());
             }
+
         }
         // TODO Read: inventory, any other data that should be
         // available through data manipulators.
@@ -130,20 +138,14 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
                 continue;
             }
             RespawnLocation respawn = entry.getValue();
-            if (dim == 0) { // Overworld
-                compound.setDouble(NbtDataUtil.USER_SPAWN_X, respawn.getPosition().getX());
-                compound.setDouble(NbtDataUtil.USER_SPAWN_Y, respawn.getPosition().getY());
-                compound.setDouble(NbtDataUtil.USER_SPAWN_Z, respawn.getPosition().getZ());
-                compound.setBoolean(NbtDataUtil.USER_SPAWN_FORCED, false); // No way to know
-            } else {
-                NBTTagCompound spawndata = new NBTTagCompound();
-                spawndata.setInteger(NbtDataUtil.USER_SPAWN_DIM, dim);
-                spawndata.setDouble(NbtDataUtil.USER_SPAWN_X, respawn.getPosition().getX());
-                spawndata.setDouble(NbtDataUtil.USER_SPAWN_Y, respawn.getPosition().getY());
-                spawndata.setDouble(NbtDataUtil.USER_SPAWN_Z, respawn.getPosition().getZ());
-                spawndata.setBoolean(NbtDataUtil.USER_SPAWN_FORCED, false); // No way to know
-                spawnlist.appendTag(spawndata);
-            }
+            NBTTagCompound spawndata = new NBTTagCompound();
+            spawndata.setLong(NbtDataUtil.USER_SPAWN_WORLD_UUID_MOST, entry.getKey().getMostSignificantBits());
+            spawndata.setLong(NbtDataUtil.USER_SPAWN_WORLD_UUID_LEAST, entry.getKey().getLeastSignificantBits());
+            spawndata.setDouble(NbtDataUtil.USER_SPAWN_X, respawn.getPosition().getX());
+            spawndata.setDouble(NbtDataUtil.USER_SPAWN_Y, respawn.getPosition().getY());
+            spawndata.setDouble(NbtDataUtil.USER_SPAWN_Z, respawn.getPosition().getZ());
+            spawndata.setBoolean(NbtDataUtil.USER_SPAWN_FORCED, false); // No way to know
+            spawnlist.appendTag(spawndata);
         }
         if (!spawnlist.hasNoTags()) {
             compound.setTag(NbtDataUtil.USER_SPAWN_LIST, spawnlist);
