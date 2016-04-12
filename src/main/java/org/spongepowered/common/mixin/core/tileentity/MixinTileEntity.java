@@ -232,7 +232,7 @@ public abstract class MixinTileEntity implements TileEntity, IMixinTileEntity {
                         offer(manipulator);
                     }
                 } catch (InvalidDataException e) {
-                    SpongeImpl.getLogger().error("Could not deserialize custom plugin data! ", e);
+                    SpongeImpl.getLogger().error("Could not translate custom plugin data! ", e);
                 }
             }
         }
