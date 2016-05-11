@@ -27,7 +27,11 @@ package org.spongepowered.common.world.schematic;
 import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.MemoryDataContainer;
+import org.spongepowered.api.world.extent.ArchetypeVolume;
+import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
+import org.spongepowered.api.world.schematic.Palette;
 import org.spongepowered.api.world.schematic.Schematic;
+import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
 
 public class CharArraySchematic extends CharArraySchematicVolume implements Schematic {
 
@@ -45,6 +49,11 @@ public class CharArraySchematic extends CharArraySchematicVolume implements Sche
     @Override
     public DataContainer getMetadata() {
         return this.metadata;
+    }
+
+    @Override
+    public MutableBlockVolumeWorker<Schematic> getBlockWorker() {
+        return new SpongeMutableBlockVolumeWorker<>(this);
     }
 
 }

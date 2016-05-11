@@ -115,6 +115,7 @@ import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.block.SpongeBlockSnapshot;
 import org.spongepowered.common.config.SpongeConfig;
 import org.spongepowered.common.config.type.WorldConfig;
+import org.spongepowered.common.data.persistence.ConfigurateTranslator;
 import org.spongepowered.common.data.util.DataQueries;
 import org.spongepowered.common.effect.particle.SpongeParticleEffect;
 import org.spongepowered.common.effect.particle.SpongeParticleHelper;

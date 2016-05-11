@@ -24,48 +24,24 @@
  */
 package org.spongepowered.common.world.schematic;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.world.schematic.Palette;
+import org.spongepowered.api.world.schematic.PaletteType;
+import org.spongepowered.common.SpongeCatalogType;
 
-import java.util.Optional;
+import java.util.function.Supplier;
 
-public class GlobalPalette implements Palette {
+public class SpongePaletteType extends SpongeCatalogType implements PaletteType {
 
-    public static GlobalPalette instance = new GlobalPalette();
+    private final Supplier<Palette> builder;
 
-    private final int length;
-
-    private GlobalPalette() {
-        this.length = Sponge.getRegistry().getAllOf(BlockState.class).size();
+    public SpongePaletteType(String id, Supplier<Palette> builder) {
+        super(id);
+        this.builder = builder;
     }
 
     @Override
-    public int getHighestId() {
-        return this.length;
-    }
-
-    @Override
-    public Optional<Integer> get(BlockState state) {
-        return Optional.of(Block.BLOCK_STATE_IDS.get((IBlockState) state));
-    }
-
-    @Override
-    public int getOrAssign(BlockState state) {
-        return Block.BLOCK_STATE_IDS.get((IBlockState) state);
-    }
-
-    @Override
-    public Optional<BlockState> get(int id) {
-        return Optional.ofNullable((BlockState) Block.BLOCK_STATE_IDS.getByValue(id));
-    }
-
-    @Override
-    public boolean remove(BlockState state) {
-        // Unsupported
-        return false;
+    public Palette create() {
+        return this.builder.get();
     }
 
 }

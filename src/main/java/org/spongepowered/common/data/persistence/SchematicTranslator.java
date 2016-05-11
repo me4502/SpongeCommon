@@ -22,22 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.world.schematic;
+package org.spongepowered.common.data.persistence;
 
-import org.spongepowered.api.block.BlockState;
 
-import java.util.Optional;
-
-public interface Palette {
-
-    int getLength();
-
-    Optional<Integer> get(BlockState state);
-
-    int getOrAssign(BlockState state);
-
-    Optional<BlockState> get(int id);
-
-    boolean remove(BlockState state);
+public class SchematicTranslator {
 
 }

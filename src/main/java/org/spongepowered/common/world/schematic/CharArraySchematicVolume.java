@@ -29,8 +29,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.spongepowered.api.block.tileentity.TileEntityArchetype;
 import org.spongepowered.api.entity.EntityArchetype;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.ArchetypeVolume;
 import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
+import org.spongepowered.api.world.schematic.Palette;
 import org.spongepowered.common.util.gen.CharArrayMutableBlockBuffer;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
 
@@ -70,6 +74,11 @@ public class CharArraySchematicVolume extends CharArrayMutableBlockBuffer implem
     @Override
     public MutableBlockVolumeWorker<? extends ArchetypeVolume> getBlockWorker() {
         return new SpongeMutableBlockVolumeWorker<>(this);
+    }
+
+    @Override
+    public void apply(Location<World> location, Cause cause) {
+        // TODO apply
     }
 
 }

@@ -205,4 +205,20 @@ public final class DataQueries {
         }
 
     }
+    
+    public static final class LegacySchematic {
+        
+        public static final DataQuery WIDTH = of("Width");
+        public static final DataQuery HEIGHT = of("Height");
+        public static final DataQuery LENGTH = of("Length");
+
+        public static final DataQuery MATERIALS = of("Materials");
+        
+        public static final DataQuery OFFSET_X = of("WEOffsetX");
+        public static final DataQuery OFFSET_Y = of("WEOffsetY");
+        public static final DataQuery OFFSET_Z = of("WEOffsetZ");
+        
+        private LegacySchematic() {
+        }
+    }
 }

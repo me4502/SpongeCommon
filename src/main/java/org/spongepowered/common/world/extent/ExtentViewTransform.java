@@ -597,7 +597,5 @@ public class ExtentViewTransform implements DefaultedExtent {
             Preconditions.checkState(this.valid, "Cannot access biomes when rotated around an axis that isn't y");
             return this.transform.transformZ(x, 0, y);
         }
-
     }
-
 }

@@ -27,6 +27,7 @@ package org.spongepowered.common.world.schematic;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.world.schematic.Palette;
 
 import java.util.BitSet;
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class BimapPalette implements Palette {
     }
 
     @Override
-    public int getLength() {
+    public int getHighestId() {
         return this.maxId;
     }
 

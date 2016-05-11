@@ -29,6 +29,7 @@ import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.util.DiscreteTransform2;
 import org.spongepowered.api.util.DiscreteTransform3;
 import org.spongepowered.api.util.PositionOutOfBoundsException;
+import org.spongepowered.api.world.extent.ArchetypeVolume;
 import org.spongepowered.api.world.extent.Extent;
 import org.spongepowered.api.world.extent.ImmutableBiomeArea;
 import org.spongepowered.api.world.extent.ImmutableBlockVolume;
@@ -39,12 +40,16 @@ import org.spongepowered.api.world.extent.UnmodifiableBiomeArea;
 import org.spongepowered.api.world.extent.UnmodifiableBlockVolume;
 import org.spongepowered.api.world.extent.worker.MutableBiomeAreaWorker;
 import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
+import org.spongepowered.api.world.extent.worker.procedure.BlockVolumeMapper;
+import org.spongepowered.api.world.schematic.Palette;
+import org.spongepowered.api.world.schematic.PaletteType;
 import org.spongepowered.common.util.gen.ByteArrayImmutableBiomeBuffer;
 import org.spongepowered.common.util.gen.ByteArrayMutableBiomeBuffer;
 import org.spongepowered.common.util.gen.CharArrayImmutableBlockBuffer;
 import org.spongepowered.common.util.gen.CharArrayMutableBlockBuffer;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBiomeAreaWorker;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
+import org.spongepowered.common.world.schematic.CharArraySchematicVolume;
 
 /**
  * The Extent interface with extra defaults that are only available in the implementation.
@@ -137,6 +142,18 @@ public interface DefaultedExtent extends Extent {
     @Override
     default MutableBlockVolumeWorker<? extends Extent> getBlockWorker() {
         return new SpongeMutableBlockVolumeWorker<>(this);
+    }
+    
+    @Override
+    default ArchetypeVolume createArchetypeVolume(Vector3i min, Vector3i max, Vector3i origin, PaletteType type) {
+        Palette palette = type.create();
+        CharArraySchematicVolume volume = new CharArraySchematicVolume(palette, min.sub(origin), max.sub(origin));
+        Extent area = getExtentView(min, max);
+        area.getBlockWorker().map((extent, x, y, z)->{
+            return extent.getBlock(x, y, z);
+        }, volume);
+        // TODO create tile entity / entity archetypes
+        return volume;
     }
 
 }

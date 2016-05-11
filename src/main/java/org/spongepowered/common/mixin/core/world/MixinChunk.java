@@ -24,9 +24,6 @@
  */
 package org.spongepowered.common.mixin.core.world;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.flowpowered.math.vector.Vector2i;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
@@ -398,12 +395,12 @@ public abstract class MixinChunk implements Chunk, IMixinChunk {
     }
 
     @Override
-    public MutableBiomeAreaWorker<? extends Chunk> getBiomeWorker() {
+    public MutableBiomeAreaWorker<Chunk> getBiomeWorker() {
         return new SpongeMutableBiomeAreaWorker<>(this);
     }
 
     @Override
-    public MutableBlockVolumeWorker<? extends Chunk> getBlockWorker() {
+    public MutableBlockVolumeWorker<Chunk> getBlockWorker() {
         return new SpongeMutableBlockVolumeWorker<>(this);
     }
 
