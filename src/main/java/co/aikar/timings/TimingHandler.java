@@ -27,6 +27,7 @@ package co.aikar.timings;
 import co.aikar.util.LoadingIntMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.server.MinecraftServer;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.common.SpongeImpl;
 
 class TimingHandler implements Timing {
@@ -84,6 +85,10 @@ class TimingHandler implements Timing {
 
     @Override
     public void startTimingIfSync() {
+        if (Sponge.getGame().getPlatform().getExecutionType().isClient()) {
+            return;
+        }
+
         if (MinecraftServer.getServer().isCallingFromMinecraftThread()) {
             startTiming();
         }
@@ -91,6 +96,10 @@ class TimingHandler implements Timing {
 
     @Override
     public void stopTimingIfSync() {
+        if (Sponge.getGame().getPlatform().getExecutionType().isClient()) {
+            return;
+        }
+
         if (MinecraftServer.getServer().isCallingFromMinecraftThread()) {
             stopTiming();
         }
@@ -98,6 +107,10 @@ class TimingHandler implements Timing {
 
     @Override
     public TimingHandler startTiming() {
+        if (Sponge.getGame().getPlatform().getExecutionType().isClient()) {
+            return this;
+        }
+
         if (this.enabled && ++this.timingDepth == 1) {
             this.start = System.nanoTime();
             this.parent = TimingsManager.CURRENT;
@@ -108,6 +121,10 @@ class TimingHandler implements Timing {
 
     @Override
     public void stopTiming() {
+        if (Sponge.getGame().getPlatform().getExecutionType().isClient()) {
+            return;
+        }
+
         if (this.enabled && --this.timingDepth == 0 && this.start != 0) {
             if (!MinecraftServer.getServer().isCallingFromMinecraftThread()) {
                 SpongeImpl.getLogger().fatal("stopTiming called async for " + this.name);
