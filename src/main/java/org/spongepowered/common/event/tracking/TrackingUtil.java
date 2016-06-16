@@ -38,6 +38,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -284,4 +285,7 @@ public final class TrackingUtil {
     private TrackingUtil() {
     }
 
+    public static void breakBlock(Block currentBlock, World worldObj, BlockPos pos, IBlockState currentState) {
+        currentBlock.breakBlock(worldObj, pos, currentState);
+    }
 }

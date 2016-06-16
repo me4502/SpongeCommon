@@ -83,8 +83,8 @@ public class ItemDropData {
         entityItem.posX = this.position.getX();
         entityItem.posY = this.position.getY();
         entityItem.posZ = this.position.getZ();
-        entityItem.motionX = this.position.getX();
-        entityItem.motionY = this.position.getY();
+        entityItem.motionX = this.motion.getX();
+        entityItem.motionY = this.motion.getY();
         entityItem.motionZ = this.motion.getZ();
         return entityItem;
     }

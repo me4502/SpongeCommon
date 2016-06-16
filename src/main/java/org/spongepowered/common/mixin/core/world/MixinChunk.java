@@ -88,6 +88,7 @@ import org.spongepowered.common.event.tracking.CauseTracker;
 import org.spongepowered.common.event.tracking.IPhaseState;
 import org.spongepowered.common.event.tracking.PhaseContext;
 import org.spongepowered.common.event.tracking.PhaseData;
+import org.spongepowered.common.event.tracking.TrackingUtil;
 import org.spongepowered.common.event.tracking.phase.BlockPhase;
 import org.spongepowered.common.event.tracking.phase.TrackingPhases;
 import org.spongepowered.common.event.tracking.phase.WorldPhase;
@@ -527,7 +528,6 @@ public abstract class MixinChunk implements Chunk, IMixinChunk {
             if (!this.worldObj.isRemote) {
                 // Sponge - Forge adds this change for block changes to only fire events when necessary
                 if (currentState.getBlock() != newState.getBlock()) {
-                    // TODO - delegate entity spawns to the per block entity captures
                     currentBlock.breakBlock(this.worldObj, pos, currentState);
                 }
                 // Sponge - Add several tile entity hook checks. Mainly for forge added hooks, but these

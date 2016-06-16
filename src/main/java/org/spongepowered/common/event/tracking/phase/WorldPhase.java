@@ -975,6 +975,11 @@ public final class WorldPhase extends TrackingPhase {
             return state instanceof BlockPhase.State || state instanceof EntityPhase.State || state == State.TERRAIN_GENERATION;
         }
 
+        @Override
+        public boolean tracksBlockSpecificDrops() {
+            return true;
+        }
+
 
         public abstract void associateAdditionalBlockChangeCauses(PhaseContext context, Cause.Builder builder, CauseTracker causeTracker);
 
