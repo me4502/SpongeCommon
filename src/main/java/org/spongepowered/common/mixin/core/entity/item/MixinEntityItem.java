@@ -38,6 +38,8 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.translation.Translation;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,6 +54,7 @@ import org.spongepowered.common.mixin.core.entity.MixinEntity;
 import java.util.List;
 
 @Mixin(EntityItem.class)
+@Implements(@Interface(iface = Item.class, unique = true, prefix = "item$"))
 public abstract class MixinEntityItem extends MixinEntity implements Item {
 
     private static final short MAGIC_INFINITE_PICKUP_DELAY = 32767;

@@ -100,6 +100,8 @@ import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 import org.spongepowered.asm.lib.Opcodes;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -144,6 +146,9 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 @Mixin(net.minecraft.entity.Entity.class)
+@Implements({@Interface(iface = Entity.class, prefix = "entity$", unique = true),
+             @Interface(iface = IMixinEntity.class, prefix = "mixinEntity$", unique = true)
+})
 public abstract class MixinEntity implements Entity, IMixinEntity {
 
     private static final String LAVA_DAMAGESOURCE_FIELD = "Lnet/minecraft/util/DamageSource;lava:Lnet/minecraft/util/DamageSource;";

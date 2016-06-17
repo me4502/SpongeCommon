@@ -30,6 +30,8 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.asm.lib.Opcodes;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -43,6 +45,9 @@ import org.spongepowered.common.util.VectorSerializer;
 import javax.annotation.Nullable;
 
 @Mixin(EntityMinecart.class)
+@Implements({@Interface(iface = Minecart.class, prefix = "minecart$", unique = true),
+             @Interface(iface = IMixinMinecart.class, prefix = "mixinMinecart$", unique = true)
+})
 public abstract class MixinEntityMinecart extends MixinEntity implements Minecart, IMixinMinecart {
 
     private static final String RIDER_ENTITY_FIELD = "Lnet/minecraft/entity/item/EntityMinecart;riddenByEntity:Lnet/minecraft/entity/Entity;";
